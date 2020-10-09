@@ -38,17 +38,17 @@ Now you can use REST API (which is at `localhost:8091`) to interact with Kafka
 ([API reference](https://docs.confluent.io/5.5.2/kafka-rest/api.html))
 
 - List topics
-    ```
-    curl --location --request GET 'localhost:8091/topics'
+    ```bash
+    curl -L -X GET 'localhost:8091/topics'
     ```
 - Describe a topic by name
-    ```
-    curl --location --request GET 'localhost:8091/topics/t1'
+    ```bash
+    curl -L -X GET 'localhost:8091/topics/t1'
     ```
 - Produce some messages to `t1`. Send messages `confluent`, `kafka` and `logs` as Base64-encoded strings:
-    ```curl
-    curl --location --request POST 'localhost:8091/topics/t1' \
-    --header 'Content-Type: application/vnd.kafka.binary.v2+json' \
+    ```bash
+    curl -L -X POST 'localhost:8091/topics/t1' \
+    -H 'Content-Type: application/vnd.kafka.binary.v2+json' \
     --data-raw '{"records":[{"value":"Y29uZmx1ZW50"},{"key":"a2V5","value":"a2Fma2E="},{"value":"bG9ncw=="}]}'
     ```
 
