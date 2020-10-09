@@ -45,7 +45,7 @@ Now you can use REST API (which is at `localhost:8091`) to interact with Kafka
     ```
     curl --location --request GET 'localhost:8091/topics/t1'
     ```
-- Produce some messages to `t1`. Send message `confluent`, message `kafka` and message `logs` as Base64-encoded strings:
+- Produce some messages to `t1`. Send messages `confluent`, `kafka` and `logs` as Base64-encoded strings:
     ```curl
     curl --location --request POST 'localhost:8091/topics/t1' \
     --header 'Content-Type: application/vnd.kafka.binary.v2+json' \
@@ -54,10 +54,10 @@ Now you can use REST API (which is at `localhost:8091`) to interact with Kafka
 
 ### Using [JSON schemas](https://json-schema.org/)
 
-- Produce some message with JSON schema to `tjson`. Send a schema structure
+- Produce some messages with JSON schema to `tjson`. Send a schema structure
 `{"type": "object", "properties": {"id": {"type": "integer"}, "name": {"type": "string"}}}`,
-object `{"id": 10, "name": "testuser10"}` as message one and object `{"id": 42, "name": "deusexmachina"}` as message two.
-(*notice that you will receive `"value_schema_id": 1` in the response message*):
+and objects `{"id": 10, "name": "testuser10"}` and `{"id": 42, "name": "deusexmachina"}`
+(*notice that you will receive something like `"value_schema_id": 1` in the response message*):
     ```
     curl --location --request POST 'localhost:8091/topics/tjson' \
     --header 'Content-Type: application/vnd.kafka.jsonschema.v2+json' \
@@ -68,4 +68,22 @@ object `{"id": 10, "name": "testuser10"}` as message one and object `{"id": 42, 
     curl --location --request POST 'localhost:8091/topics/tjson' \
     --header 'Content-Type: application/vnd.kafka.jsonschema.v2+json' \
     --data-raw '{"value_schema_id":1,"records":[{"value":{"id":2,"name":"testuser2"}},{"value":{"id":133,"name":"me"}}]}'
+    ```
+
+### Using [Avro schemas](https://avro.apache.org/)
+
+- Produce some messages with Avro schema to `tavro`. Send a schema structure
+`{"type": "record", "name": "user", "fields": [{"name": "id", "type": "int"}, {"name": "name", "type": "string"}]}`,
+and objects `{"id": 10, "name": "testuser10"}` and `{"id": 42, "name": "deusexmachina"}`
+(*notice that you will receive something like `"value_schema_id": 2` in the response message*):
+    ```curl
+    curl --location --request POST 'localhost:8091/topics/tavro' \
+    --header 'Content-Type: application/vnd.kafka.avro.v2+json' \
+    --data-raw '{"value_schema":"{\"type\":\"record\",\"name\":\"user\",\"fields\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"name\",\"type\":\"string\"}]}","records":[{"value":{"id":10,"name":"testuser10"}},{"value":{"id":42,"name":"deusexmachina"}}]}'
+    ```
+- Produce more messages using the schema ID (`2`). Send objects `{"id": 2, "name": "testuser2"}` and `{"id": 133, "name": "me"}`:
+    ```curl
+    curl --location --request POST 'localhost:8091/topics/tavro' \
+    --header 'Content-Type: application/vnd.kafka.avro.v2+json' \
+    --data-raw '{"value_schema_id":2,"records":[{"value":{"id":2,"name":"testuser2"}},{"value":{"id":133,"name":"me"}}]}'
     ```
