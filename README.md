@@ -1,4 +1,7 @@
-## DEV Kafka setup
+## Dev Kafka setup
+
+This project contains a Docker-Compose config example for development needs:
+it sets up Zookeeper, Kafka, Schema-Registry and Rest-Proxy using Confluent v5.5.2 images.
 
 ### Basic setup
 
