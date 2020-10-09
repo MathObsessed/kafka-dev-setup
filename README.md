@@ -76,7 +76,7 @@ Schema
     -H 'Content-Type: application/vnd.kafka.jsonschema.v2+json' \
     --data-raw '{"value_schema":"{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}}}","records":[{"value":{"id":10,"name":"testuser10"}},{"value":{"id":42,"name":"deusexmachina"}}]}'
     ```
-- Produce more messages using the schema ID (`1`). Send objects `{"id": 2, "name": "testuser2"}` and `{"id": 133, "name": "me"}`:
+- Produce more messages using the schema ID (`1`):
     ```bash
     curl -L -X POST 'localhost:8091/topics/tjson' \
     -H 'Content-Type: application/vnd.kafka.jsonschema.v2+json' \
@@ -96,7 +96,7 @@ Schema
     -H 'Content-Type: application/vnd.kafka.avro.v2+json' \
     --data-raw '{"value_schema":"{\"type\":\"record\",\"name\":\"user\",\"fields\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"name\",\"type\":\"string\"}]}","records":[{"value":{"id":10,"name":"testuser10"}},{"value":{"id":42,"name":"deusexmachina"}}]}'
     ```
-- Produce more messages using the schema ID (`2`). Send objects `{"id": 2, "name": "testuser2"}` and `{"id": 133, "name": "me"}`:
+- Produce more messages using the schema ID (`2`):
     ```bash
     curl -L -X POST 'localhost:8091/topics/tavro' \
     -H 'Content-Type: application/vnd.kafka.avro.v2+json' \
