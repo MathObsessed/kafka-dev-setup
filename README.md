@@ -49,41 +49,56 @@ Now you can use REST API (which is at `localhost:8091`) to interact with Kafka
     ```bash
     curl -L -X POST 'localhost:8091/topics/t1' \
     -H 'Content-Type: application/vnd.kafka.binary.v2+json' \
-    --data-raw '{"records":[{"value":"Y29uZmx1ZW50"},{"key":"a2V5","value":"a2Fma2E="},{"value":"bG9ncw=="}]}'
+    --data-raw '{"records":[{"value":"Y29uZmx1ZW50"},{"value":"a2Fma2E="},{"value":"bG9ncw=="}]}'
     ```
+
+### Produce test objects (Users)
+
+```json
+[
+    {"id": 2, "name": "testuser2"},
+    {"id": 10, "name": "testuser10"},
+    {"id": 42, "name": "deusexmachina"},
+    {"id": 133, "name": "me"}
+]
+```
 
 ### Using [JSON schemas](https://json-schema.org/)
 
-- Produce some messages with JSON schema to `tjson`. Send a schema structure
-`{"type": "object", "properties": {"id": {"type": "integer"}, "name": {"type": "string"}}}`,
-and objects `{"id": 10, "name": "testuser10"}` and `{"id": 42, "name": "deusexmachina"}`
-(*notice that you will receive something like `"value_schema_id": 1` in the response message*):
-    ```
-    curl --location --request POST 'localhost:8091/topics/tjson' \
-    --header 'Content-Type: application/vnd.kafka.jsonschema.v2+json' \
+Schema
+```json
+{"type": "object", "properties": {"id": {"type": "integer"}, "name": {"type": "string"}}}
+```
+
+- Produce some messages with JSON schema to `tjson` (*notice that you will receive something like `"value_schema_id": 1` in the response message*):
+    ```bash
+    curl -L -X POST 'localhost:8091/topics/tjson' \
+    -H 'Content-Type: application/vnd.kafka.jsonschema.v2+json' \
     --data-raw '{"value_schema":"{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}}}","records":[{"value":{"id":10,"name":"testuser10"}},{"value":{"id":42,"name":"deusexmachina"}}]}'
     ```
 - Produce more messages using the schema ID (`1`). Send objects `{"id": 2, "name": "testuser2"}` and `{"id": 133, "name": "me"}`:
-    ```
-    curl --location --request POST 'localhost:8091/topics/tjson' \
-    --header 'Content-Type: application/vnd.kafka.jsonschema.v2+json' \
+    ```bash
+    curl -L -X POST 'localhost:8091/topics/tjson' \
+    -H 'Content-Type: application/vnd.kafka.jsonschema.v2+json' \
     --data-raw '{"value_schema_id":1,"records":[{"value":{"id":2,"name":"testuser2"}},{"value":{"id":133,"name":"me"}}]}'
     ```
 
 ### Using [Avro schemas](https://avro.apache.org/)
 
-- Produce some messages with Avro schema to `tavro`. Send a schema structure
-`{"type": "record", "name": "user", "fields": [{"name": "id", "type": "int"}, {"name": "name", "type": "string"}]}`,
-and objects `{"id": 10, "name": "testuser10"}` and `{"id": 42, "name": "deusexmachina"}`
-(*notice that you will receive something like `"value_schema_id": 2` in the response message*):
-    ```curl
-    curl --location --request POST 'localhost:8091/topics/tavro' \
-    --header 'Content-Type: application/vnd.kafka.avro.v2+json' \
+Schema
+```json
+{"type": "record", "name": "user", "fields": [{"name": "id", "type": "int"}, {"name": "name", "type": "string"}]}
+```
+
+- Produce some messages with Avro schema to `tavro` (*notice that you will receive something like `"value_schema_id": 2` in the response message*):
+    ```bash
+    curl -L -X POST 'localhost:8091/topics/tavro' \
+    -H 'Content-Type: application/vnd.kafka.avro.v2+json' \
     --data-raw '{"value_schema":"{\"type\":\"record\",\"name\":\"user\",\"fields\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"name\",\"type\":\"string\"}]}","records":[{"value":{"id":10,"name":"testuser10"}},{"value":{"id":42,"name":"deusexmachina"}}]}'
     ```
 - Produce more messages using the schema ID (`2`). Send objects `{"id": 2, "name": "testuser2"}` and `{"id": 133, "name": "me"}`:
-    ```curl
-    curl --location --request POST 'localhost:8091/topics/tavro' \
-    --header 'Content-Type: application/vnd.kafka.avro.v2+json' \
+    ```bash
+    curl -L -X POST 'localhost:8091/topics/tavro' \
+    -H 'Content-Type: application/vnd.kafka.avro.v2+json' \
     --data-raw '{"value_schema_id":2,"records":[{"value":{"id":2,"name":"testuser2"}},{"value":{"id":133,"name":"me"}}]}'
     ```
