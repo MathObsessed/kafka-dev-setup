@@ -31,6 +31,17 @@ and to Schema-Registry at `host.docker.internal:8090` from within your Docker ap
     docker exec -t kafka_kafka_1 kafka-console-consumer --bootstrap-server kafka:9092 --group g1 --topic t1
     ```
 
+#### Working with offsets (note: assignments can only be reset if the group is inactive)
+
+- Reset offset of topic `t1` partition `0` to earliest for group `g1` (you can set offset for many partitions with `t1:0,1,2`)
+    ```bash
+    docker exec -t kafka_kafka_1 kafka-consumer-groups --bootstrap-server kafka:9092 --reset-offsets --topic t1:0 --to-earliest --group g1 --execute
+    ```
+- Reset offset of topic `t1` partition `0` to `1` for group `g1`
+    ```bash
+    docker exec -t kafka_kafka_1 kafka-consumer-groups --bootstrap-server kafka:9092 --reset-offsets --topic t1:0 --to-offset 1 --group g1 --execute
+    ```
+
 ### Full stack
 
 Run `docker-compose up` to get all 4 services up (or `docker-compose up schema-registry rest-proxy` after the basic setup).
